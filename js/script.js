@@ -39,4 +39,18 @@ function applySocialIcons(root = document) {
   });
 }
 
+// A Inscripcions, la informació general és sempre visible i no és un desplegable.
+document.querySelectorAll('.info-item > summary').forEach(summary => {
+  summary.addEventListener('click', event => event.preventDefault());
+});
+
+// El primer document i les seves bases són sempre visibles.
+const firstDocument = document.querySelector('.document-item');
+firstDocument?.setAttribute('open', '');
+
+// Els documents no tenen comportament de botó ni animació de +/×.
+document.querySelectorAll('.document-item > summary').forEach(summary => {
+  summary.addEventListener('click', event => event.preventDefault());
+});
+
 applySocialIcons();
