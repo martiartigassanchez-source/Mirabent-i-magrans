@@ -3,7 +3,7 @@ const toggle = document.querySelector('.menu-toggle');
 const links = document.querySelector('.nav-links');
 
 window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 20);
+  header?.classList.toggle('scrolled', window.scrollY > 20);
 });
 
 toggle?.addEventListener('click', () => {
@@ -17,3 +17,22 @@ links?.querySelectorAll('a').forEach(link => {
     toggle?.setAttribute('aria-expanded', 'false');
   });
 });
+
+const instagramIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>';
+const facebookIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.7.3-1 1-1Z" fill="currentColor"/></svg>';
+
+function applySocialIcons(root = document) {
+  root.querySelectorAll('.footer-contact > div, .contact-detail').forEach(item => {
+    const label = item.querySelector('span')?.textContent.trim().toLowerCase();
+    const link = item.querySelector('a');
+    if (!link || !label || (label !== 'instagram' && label !== 'facebook')) return;
+    link.innerHTML = label === 'instagram' ? instagramIcon : facebookIcon;
+    link.setAttribute('aria-label', label === 'instagram' ? 'Instagram' : 'Facebook');
+    link.style.display = 'inline-flex';
+    link.style.alignItems = 'center';
+    link.style.width = 'max-content';
+    link.style.height = '17px';
+  });
+}
+
+applySocialIcons();
