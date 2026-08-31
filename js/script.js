@@ -28,10 +28,14 @@ function applySocialIcons(root = document) {
     if (!link || !label || (label !== 'instagram' && label !== 'facebook')) return;
     link.innerHTML = label === 'instagram' ? instagramIcon : facebookIcon;
     link.setAttribute('aria-label', label === 'instagram' ? 'Instagram' : 'Facebook');
+    link.setAttribute('title', label === 'instagram' ? 'Instagram' : 'Facebook');
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
     link.style.display = 'inline-flex';
     link.style.alignItems = 'center';
     link.style.width = 'max-content';
     link.style.height = '17px';
+    link.style.lineHeight = '0';
   });
 }
 
