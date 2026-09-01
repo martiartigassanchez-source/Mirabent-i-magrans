@@ -71,6 +71,10 @@ function normalizeJuryPhotos() {
       overflow: hidden !important;
       box-sizing: border-box !important;
     }
+    .jury-home-card, .jury-current-card {
+      padding-left: 18px !important;
+      padding-right: 18px !important;
+    }
     .jury-home-photo img, .jury-photo img {
       width: 100% !important;
       height: 100% !important;
