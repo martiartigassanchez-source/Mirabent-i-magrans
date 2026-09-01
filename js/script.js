@@ -27,4 +27,45 @@ document.querySelectorAll('.info-item > summary, .document-item > summary').forE
   if (summary.closest('.document-item')) summary.style.gridTemplateColumns = '50px 1fr';
 });
 document.querySelector('.document-item')?.setAttribute('open', '');
+
+// Historial dels guanyadors: els premis especials i les mencions pertanyen al seu any.
+const specialAwards = {
+  '2023': ['Premi Cambra Romànica — Trio Nacedo'],
+  '2019': ['Premi Victoria dels Àngels — Lalit Worathepnitinian', 'Premi Jardí dels Tarongers — Marta Bauzá'],
+  '2017': ['Premi AOS — Hélène Walter i Daniela Vega'],
+  '2014': ['Premi Fundació Mas i Mas — Tulam Duo', 'Premi Joventuts Musicals — Fukio Ensemble', 'Premi Associació Eduard Toldrà — Cosmos Quartet', 'Premi Fundació Mas i Mas — Verónica Tello', 'Premi Joventuts Musicals Sitges — Dania Rodríguez'],
+  '2013': ['Premi Fundació Mas i Mas — Blooming Duo', 'Premi Joventuts Musicals — Trio Pedrell', 'Premi Fundació Mas i Mas — Anna Puche', 'Premi Joventuts Musicals Sitges — Anna Puche'],
+  '2012': ['Premi Montserrat Mirabent — Duo Rey-Rodiles', 'Premi Fundació Mas i Mas — Biel Quartet', 'Premi Fundació Callís — Francisco Fernández-Rueda', 'Premi Fundació Mas i Mas — Xavier Aguilar'],
+  '2011': ['Premi Casa Parramon — Alicia Salas i Lara Fernández', 'Premi Cançó catalana — Duo Alfageme', 'Premi Fundació Mas i Mas — Trio Baroja', 'Menció d’honor — Beñat Egiarte i Miguel Borrallo', 'Premi Cançó catalana — Mar Jordana', 'Premi Fundació Callís — Josep Ramon Olivé', 'Premi Fundació Mas i Mas — Gabriel Blanco'],
+  '2010': ['Premi Casa Parramon — Madeleine Przybyl', 'Premi Cançó catalana — Duo A+A', 'Premi Associació Concertante — Duo Santor-Gilort i Duo Przybyl-Schube', 'Premi Fundació Mas i Mas — Quartet Tetrauk', 'Premi Jaume Callís cançó catalana — Eduard Moreno', 'Premi Associació Concertante — Maria Miró i Marta Huarte', 'Premi Academia BCN Concertante — Abdellah Lasri'],
+  '2009': ['Premi Casa Parramon — Teresa Lli Rumbau', 'Premi Jaume Callís, Cançó catalana — Duo Aromes', 'Menció d’Honor — Ensemble ILMA', 'Premi Cançó catalana — Mireia Dolç', 'Menció d’Honor — Eugènia Montenegro, Maria Escobar'],
+  '2008': ['Premi Casa Parramon — Javier Cárdenas', 'Premi Jaume Callís, Cançó catalana — Quintet de Vent “Dada”', 'Menció d’Honor — La Ritirata', 'Premi Cançó catalana — Eugènia Montenegro', 'Menció d’Honor — Cristina Herreras, Maria Miró, Ilona Mataradze'],
+  '2007': ['Premi Cançó catalana — Alícia Ferrer'],
+  '2006': ['Premi Cançó catalana — Inés Moraleda']
+};
+function setupWinnerHistory() {
+  const years = document.querySelector('.winner-years');
+  if (!years) return;
+
+  // Les fotografies generals de la part inferior no es mantenen: cada guanyador ja té el seu espai dins del seu any.
+  document.querySelectorAll('main img').forEach(img => {
+    if (!img.closest('.winner-years')) img.remove();
+  });
+
+  years.querySelectorAll('details').forEach(detail => {
+    const year = detail.querySelector('summary')?.textContent.trim();
+    if (!year) return;
+
+    detail.querySelectorAll('.special-note').forEach(note => note.remove());
+    const awards = specialAwards[year];
+    if (!awards?.length) return;
+
+    const note = document.createElement('div');
+    note.className = 'special-note';
+    note.innerHTML = '<span>Premis especials i mencions</span>' + awards.map(award => `<p>${award}</p>`).join('');
+    detail.appendChild(note);
+  });
+}
+
+setupWinnerHistory();
 applySocialIcons();
