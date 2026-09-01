@@ -75,6 +75,9 @@ function normalizeJuryPhotos() {
       padding-left: 18px !important;
       padding-right: 18px !important;
     }
+    .jury-home-card strong, .jury-current-card strong {
+      font-size: 18px !important;
+    }
     .jury-home-photo img, .jury-photo img {
       width: 100% !important;
       height: 100% !important;
