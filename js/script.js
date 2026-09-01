@@ -4,7 +4,6 @@ const links = document.querySelector('.nav-links');
 window.addEventListener('scroll', () => { header?.classList.toggle('scrolled', window.scrollY > 20); });
 toggle?.addEventListener('click', () => { const open = links.classList.toggle('open'); toggle.setAttribute('aria-expanded', String(open)); });
 links?.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { links.classList.remove('open'); toggle?.setAttribute('aria-expanded', 'false'); }); });
-// Elimina els enllaços a la pàgina independent "El concurs", que ja no forma part de la navegació.
 document.querySelectorAll('a[href="el-concurs.html"]').forEach(link => link.remove());
 const instagramIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>';
 const facebookIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.7.3-1 1-1Z" fill="currentColor"/></svg>';
@@ -28,6 +27,38 @@ document.querySelectorAll('.info-item > summary, .document-item > summary').forE
   if (summary.closest('.document-item')) summary.style.gridTemplateColumns = '50px 1fr';
 });
 document.querySelector('.document-item')?.setAttribute('open', '');
+
+const registrationHoverFix = document.createElement('style');
+registrationHoverFix.textContent = `
+  .info-menu .info-item,
+  .info-menu .info-item:hover,
+  .info-menu .info-item:focus,
+  .info-menu .info-item:active {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    transform: none !important;
+    background: transparent !important;
+    transition: none !important;
+  }
+  .info-menu .info-item > summary,
+  .info-menu .info-item > summary:hover,
+  .info-menu .info-item > summary:focus,
+  .info-menu .info-item > summary:active {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+`;
+document.head.appendChild(registrationHoverFix);
 
 const specialAwards = {
   '2023': ['Premi Cambra Romànica — Trio Nacedo'],
