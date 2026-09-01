@@ -19,7 +19,6 @@ function applySocialIcons(root = document) {
     link.style.display = 'inline-flex'; link.style.alignItems = 'center'; link.style.width = 'max-content'; link.style.height = '17px'; link.style.lineHeight = '0';
   });
 }
-// A Inscripcions, la informació general i els documents són sempre visibles i no funcionen com a desplegables.
 document.querySelectorAll('.info-item > summary, .document-item > summary').forEach(summary => {
   summary.addEventListener('click', event => event.preventDefault());
   summary.querySelector('b')?.remove();
@@ -28,7 +27,6 @@ document.querySelectorAll('.info-item > summary, .document-item > summary').forE
 });
 document.querySelector('.document-item')?.setAttribute('open', '');
 
-// Historial dels guanyadors: els premis especials i les mencions pertanyen al seu any.
 const specialAwards = {
   '2023': ['Premi Cambra Romànica — Trio Nacedo'],
   '2019': ['Premi Victoria dels Àngels — Lalit Worathepnitinian', 'Premi Jardí dels Tarongers — Marta Bauzá'],
@@ -46,20 +44,13 @@ const specialAwards = {
 function setupWinnerHistory() {
   const years = document.querySelector('.winner-years');
   if (!years) return;
-
-  // Les fotografies generals de la part inferior no es mantenen: cada guanyador ja té el seu espai dins del seu any.
-  document.querySelectorAll('main img').forEach(img => {
-    if (!img.closest('.winner-years')) img.remove();
-  });
-
+  document.querySelectorAll('main img').forEach(img => { if (!img.closest('.winner-years')) img.remove(); });
   years.querySelectorAll('details').forEach(detail => {
     const year = detail.querySelector('summary')?.textContent.trim();
     if (!year) return;
-
     detail.querySelectorAll('.special-note').forEach(note => note.remove());
     const awards = specialAwards[year];
     if (!awards?.length) return;
-
     const note = document.createElement('div');
     note.className = 'special-note';
     note.innerHTML = '<span>Premis especials i mencions</span>' + awards.map(award => `<p>${award}</p>`).join('');
@@ -67,5 +58,33 @@ function setupWinnerHistory() {
   });
 }
 
+// Normalitza les fotografies del jurat perquè totes tinguin exactament la mateixa mida, inclosa la primera.
+function normalizeJuryPhotos() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .jury-home-photo, .jury-photo {
+      width: 100% !important;
+      height: 220px !important;
+      min-height: 220px !important;
+      max-height: 220px !important;
+      aspect-ratio: auto !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    .jury-home-photo img, .jury-photo img {
+      width: 100% !important;
+      height: 100% !important;
+      min-width: 100% !important;
+      min-height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 setupWinnerHistory();
 applySocialIcons();
+normalizeJuryPhotos();
