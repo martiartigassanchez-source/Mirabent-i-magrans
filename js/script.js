@@ -149,6 +149,18 @@ function setupJuryArchiveCarousel() {
     slide.appendChild(img);
     frame.insertBefore(slide, controls[0]);
   });
+
+  const slides = frame.querySelectorAll('.jury-carousel-slide');
+  const prev = frame.querySelector('.jury-carousel-control.prev');
+  const next = frame.querySelector('.jury-carousel-control.next');
+  let current = 0;
+  const show = (n) => {
+    current = (n + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+  };
+  prev?.addEventListener('click', () => show(current - 1));
+  next?.addEventListener('click', () => show(current + 1));
+
   const style = document.createElement('style');
   style.textContent = `
     .jury-carousel-slide img {
