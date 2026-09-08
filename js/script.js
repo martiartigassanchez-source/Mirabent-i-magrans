@@ -124,6 +124,45 @@ function normalizeJuryPhotos() {
   document.head.appendChild(style);
 }
 
+function setupJuryArchiveCarousel() {
+  const frame = document.querySelector('.jury-carousel-frame');
+  if (!frame) return;
+  const images = [
+    '2023_jurat_cambrajpg.jpg',
+    '2023_jurat_cant.jpg',
+    '2025_Jurat_cant.JPG',
+    '2025_jurat_cambra.JPG',
+    'jurat21.jpg',
+    'jurat32.jpg',
+    'jurat_cambra2.jpg',
+    'jurat_cant2.jpg'
+  ];
+  const controls = frame.querySelectorAll('.jury-carousel-control');
+  frame.querySelectorAll('.jury-carousel-slide').forEach(slide => slide.remove());
+  images.forEach((file, index) => {
+    const slide = document.createElement('div');
+    slide.className = 'jury-carousel-slide' + (index === 0 ? ' active' : '');
+    const img = document.createElement('img');
+    img.src = '../images/' + file;
+    img.alt = 'Fotografia històrica del jurat';
+    img.loading = index === 0 ? 'eager' : 'lazy';
+    slide.appendChild(img);
+    frame.insertBefore(slide, controls[0]);
+  });
+  const style = document.createElement('style');
+  style.textContent = `
+    .jury-carousel-slide img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      display: block !important;
+    }
+    .jury-carousel-slide { opacity: 1 !important; }
+  `;
+  document.head.appendChild(style);
+}
+
 setupWinnerHistory();
 applySocialIcons();
 normalizeJuryPhotos();
+setupJuryArchiveCarousel();
