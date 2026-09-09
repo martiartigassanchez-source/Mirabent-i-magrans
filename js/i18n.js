@@ -11,6 +11,22 @@
   const originalAria = new WeakMap();
   const originalTitle = new WeakMap();
 
+  function ensureLanguageSelector() {
+    const navLinks = document.querySelector('.nav-links');
+    if (!navLinks) return null;
+    let switcher = navLinks.querySelector('.language-switcher');
+    if (switcher) return switcher;
+
+    switcher = document.createElement('div');
+    switcher.className = 'language-switcher';
+    switcher.setAttribute('aria-label', 'Idioma');
+    switcher.innerHTML = '<button type="button" data-lang="ca">CA</button><button type="button" data-lang="es">ES</button><button type="button" data-lang="en">EN</button>';
+    const cta = navLinks.querySelector('.nav-cta');
+    if (cta) navLinks.insertBefore(switcher, cta);
+    else navLinks.appendChild(switcher);
+    return switcher;
+  }
+
   function translatePage(lang) {
     const dict = window.MirabentTranslations?.[lang];
     if (!dict) return;
@@ -21,7 +37,7 @@
     let node;
     while ((node = walker.nextNode())) {
       const parent = node.parentElement;
-      if (!parent || ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parent.tagName)) continue;
+      if (!parent || ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parent.tagName) || parent.closest('.language-switcher')) continue;
 
       if (!originalText.has(node)) originalText.set(node, node.nodeValue);
       const raw = originalText.get(node);
@@ -52,17 +68,17 @@
   }
 
   function setupLanguageSelector() {
-    const switcher = document.querySelector('.language-switcher');
+    const switcher = ensureLanguageSelector();
     if (!switcher) return;
 
     const buttons = switcher.querySelectorAll('button[data-lang]');
     const updateActive = lang => {
-      buttons.forEach(button => {
-        button.classList.toggle('active', button.dataset.lang === lang);
-      });
+      buttons.forEach(button => button.classList.toggle('active', button.dataset.lang === lang));
     };
 
     buttons.forEach(button => {
+      if (button.dataset.bound === 'true') return;
+      button.dataset.bound = 'true';
       button.addEventListener('click', () => {
         const lang = button.dataset.lang;
         localStorage.setItem('mirabent-language', lang);
