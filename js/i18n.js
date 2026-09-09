@@ -7,6 +7,10 @@
     document.head.appendChild(s);
   });
 
+  const originalText = new WeakMap();
+  const originalAria = new WeakMap();
+  const originalTitle = new WeakMap();
+
   function translatePage(lang) {
     const dict = window.MirabentTranslations?.[lang];
     if (!dict) return;
@@ -14,30 +18,35 @@
     document.documentElement.lang = lang;
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    const nodes = [];
     let node;
     while ((node = walker.nextNode())) {
       const parent = node.parentElement;
       if (!parent || ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parent.tagName)) continue;
-      nodes.push(node);
-    }
 
-    nodes.forEach(textNode => {
-      const raw = textNode.nodeValue;
+      if (!originalText.has(node)) originalText.set(node, node.nodeValue);
+      const raw = originalText.get(node);
       const trimmed = raw.trim();
+      if (!trimmed) continue;
+
       const translated = dict[raw] ?? dict[trimmed];
-      if (translated == null) return;
+      if (translated == null) continue;
+
       const start = raw.indexOf(trimmed);
       const end = start + trimmed.length;
-      textNode.nodeValue = raw.slice(0, start) + translated + raw.slice(end);
-    });
+      node.nodeValue = raw.slice(0, start) + translated + raw.slice(end);
+    }
 
     document.querySelectorAll('[aria-label]').forEach(el => {
-      const translated = dict[el.getAttribute('aria-label')];
+      if (!originalAria.has(el)) originalAria.set(el, el.getAttribute('aria-label'));
+      const original = originalAria.get(el);
+      const translated = dict[original];
       if (translated) el.setAttribute('aria-label', translated);
     });
+
     document.querySelectorAll('title').forEach(el => {
-      const translated = dict[el.textContent.trim()];
+      if (!originalTitle.has(el)) originalTitle.set(el, el.textContent.trim());
+      const original = originalTitle.get(el);
+      const translated = dict[original];
       if (translated) el.textContent = translated;
     });
   }
