@@ -135,7 +135,8 @@ function setupJuryArchiveCarousel() {
     'jurat21.jpg',
     'jurat32.jpg',
     'jurat_cambra2.jpg',
-    'jurat_cant2.jpg'
+    'jurat_cant2.jpg',
+    'jurat-historic-01.jpg'
   ];
   const controls = frame.querySelectorAll('.jury-carousel-control');
   frame.querySelectorAll('.jury-carousel-slide').forEach(slide => slide.remove());
