@@ -179,13 +179,13 @@ function setupVenueCarousel() {
   const frames = document.querySelectorAll('.venue-carousel-frame');
   if (!frames.length) return;
   const images = [
-    'casino-prado-01.jpg',
-    'casino-prado-02.jpg',
-    'casino-prado-03.jpg',
-    'casino-prado-04.jpg',
-    'casino-prado-05.jpg',
-    'casino-prado-06.jpg',
-    'casino-prado-07.jpg'
+    '2017-09-29_Casino Prado_1.jpg',
+    "25-04-12_Casino Prado-Porta d'entrada_2.jpg",
+    '30-04-12_Casino_Prado_Porta_Sal¢-Teatre.jpg',
+    'Prado_Fa‡ana_Detall_1.jpg',
+    'Prado_Fa‡ana_Pano.jpg',
+    'Prado_int_1.jpg',
+    'Prado_int_2.jpg'
   ];
   frames.forEach(frame => {
     const basePath = frame.dataset.carouselPath || 'images/casino-prado/';
