@@ -43,33 +43,24 @@
   }
 
   function setupLanguageSelector() {
-    const nav = document.querySelector('.nav');
-    if (!nav || nav.querySelector('.language-switcher')) return;
+    const switcher = document.querySelector('.language-switcher');
+    if (!switcher) return;
 
-    const switcher = document.createElement('div');
-    switcher.className = 'language-switcher';
-    switcher.setAttribute('aria-label', 'Idioma');
+    const buttons = switcher.querySelectorAll('button[data-lang]');
+    const updateActive = lang => {
+      buttons.forEach(button => {
+        button.classList.toggle('active', button.dataset.lang === lang);
+      });
+    };
 
-    ['ca', 'es', 'en'].forEach(lang => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.dataset.lang = lang;
-      button.textContent = lang.toUpperCase();
+    buttons.forEach(button => {
       button.addEventListener('click', () => {
+        const lang = button.dataset.lang;
         localStorage.setItem('mirabent-language', lang);
         translatePage(lang);
         updateActive(lang);
       });
-      switcher.appendChild(button);
     });
-
-    nav.appendChild(switcher);
-
-    const updateActive = lang => {
-      switcher.querySelectorAll('button').forEach(button => {
-        button.classList.toggle('active', button.dataset.lang === lang);
-      });
-    };
 
     const saved = localStorage.getItem('mirabent-language');
     const initial = ['ca', 'es', 'en'].includes(saved) ? saved : 'ca';
@@ -79,11 +70,11 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .language-switcher{position:absolute;right:6vw;display:flex;align-items:center;gap:4px;margin-left:20px}
-    .language-switcher button{border:0;background:transparent;color:#20201d;font:500 10px 'DM Sans',Arial,sans-serif;letter-spacing:.08em;padding:5px 4px;cursor:pointer;opacity:.45}
+    .language-switcher{display:flex;align-items:center;gap:2px;margin-left:4px}
+    .language-switcher button{border:0;background:transparent;color:#20201d;font:500 10px 'DM Sans',Arial,sans-serif;letter-spacing:.08em;padding:5px 3px;cursor:pointer;opacity:.45}
     .language-switcher button:hover,.language-switcher button.active{opacity:1}
     .language-switcher button.active{text-decoration:underline;text-underline-offset:4px}
-    @media(max-width:850px){.language-switcher{right:62px}}
+    @media(max-width:850px){.language-switcher{margin-left:0}.language-switcher button{padding:0 3px}}
   `;
   document.head.appendChild(style);
 
