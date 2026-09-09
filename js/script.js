@@ -143,7 +143,7 @@ function setupJuryArchiveCarousel() {
     const slide = document.createElement('div');
     slide.className = 'jury-carousel-slide' + (index === 0 ? ' active' : '');
     const img = document.createElement('img');
-    img.src = '../images/' + file;
+    img.src = '../images/jurat/historic/' + file;
     img.alt = 'Fotografia històrica del jurat';
     img.loading = index === 0 ? 'eager' : 'lazy';
     slide.appendChild(img);
