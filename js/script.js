@@ -175,7 +175,100 @@ function setupJuryArchiveCarousel() {
   document.head.appendChild(style);
 }
 
+function setupVenueCarousel() {
+  const frames = document.querySelectorAll('.venue-carousel-frame');
+  if (!frames.length) return;
+  const images = [
+    'casino-prado-01.jpg',
+    'casino-prado-02.jpg',
+    'casino-prado-03.jpg',
+    'casino-prado-04.jpg',
+    'casino-prado-05.jpg',
+    'casino-prado-06.jpg',
+    'casino-prado-07.jpg'
+  ];
+  frames.forEach(frame => {
+    const basePath = frame.dataset.carouselPath || 'images/casino-prado/';
+    const controls = frame.querySelectorAll('.venue-carousel-control');
+    frame.querySelectorAll('.venue-carousel-slide').forEach(slide => slide.remove());
+    images.forEach((file, index) => {
+      const slide = document.createElement('div');
+      slide.className = 'venue-carousel-slide' + (index === 0 ? ' active' : '');
+      const img = document.createElement('img');
+      img.src = basePath + file;
+      img.alt = 'Fotografia del Casino Prado Suburense';
+      img.loading = index === 0 ? 'eager' : 'lazy';
+      slide.appendChild(img);
+      frame.insertBefore(slide, controls[0]);
+    });
+    const slides = frame.querySelectorAll('.venue-carousel-slide');
+    const prev = frame.querySelector('.venue-carousel-control.prev');
+    const next = frame.querySelector('.venue-carousel-control.next');
+    let current = 0;
+    const show = (n) => {
+      current = (n + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+    };
+    prev?.addEventListener('click', () => show(current - 1));
+    next?.addEventListener('click', () => show(current + 1));
+  });
+  const style = document.createElement('style');
+  style.textContent = `
+    .venue-carousel-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      min-height: 360px;
+      background: #20201d;
+      overflow: hidden;
+    }
+    .venue-carousel-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .venue-carousel-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .venue-carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .venue-carousel-control {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(245,241,232,.75);
+      background: rgba(32,32,29,.55);
+      color: #f5f1e8;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .venue-carousel-control:hover { background: rgba(32,32,29,.8); }
+    .venue-carousel-control.prev { left: 16px; }
+    .venue-carousel-control.next { right: 16px; }
+    @media(max-width:600px) {
+      .venue-carousel-frame { min-height: 250px; }
+      .venue-carousel-control { width: 36px; height: 36px; font-size: 20px; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 setupWinnerHistory();
 applySocialIcons();
 normalizeJuryPhotos();
 setupJuryArchiveCarousel();
+setupVenueCarousel();
