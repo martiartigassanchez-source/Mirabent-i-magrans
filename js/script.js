@@ -34,28 +34,16 @@ registrationHoverFix.textContent = `
   .info-menu .info-item:hover,
   .info-menu .info-item:focus,
   .info-menu .info-item:active {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    transform: none !important;
-    background: transparent !important;
-    transition: none !important;
+    width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
+    padding-left: 0 !important; padding-right: 0 !important; transform: none !important;
+    background: transparent !important; transition: none !important;
   }
   .info-menu .info-item > summary,
   .info-menu .info-item > summary:hover,
   .info-menu .info-item > summary:focus,
   .info-menu .info-item > summary:active {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    transform: none !important;
-    transition: none !important;
+    width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
+    padding-left: 0 !important; padding-right: 0 !important; transform: none !important; transition: none !important;
   }
 `;
 document.head.appendChild(registrationHoverFix);
@@ -90,181 +78,39 @@ function setupWinnerHistory() {
     detail.appendChild(note);
   });
 }
-
 function normalizeJuryPhotos() {
   const style = document.createElement('style');
   style.textContent = `
-    .jury-home-photo, .jury-photo {
-      width: 100% !important;
-      height: 220px !important;
-      min-height: 220px !important;
-      max-height: 220px !important;
-      aspect-ratio: auto !important;
-      overflow: hidden !important;
-      box-sizing: border-box !important;
-    }
-    .jury-home-card, .jury-current-card {
-      padding-left: 18px !important;
-      padding-right: 18px !important;
-    }
-    .jury-home-card strong, .jury-current-card strong {
-      font-size: 18px !important;
-    }
-    .jury-home-photo img, .jury-photo img {
-      width: 100% !important;
-      height: 100% !important;
-      min-width: 100% !important;
-      min-height: 100% !important;
-      max-width: none !important;
-      max-height: none !important;
-      object-fit: cover !important;
-      display: block !important;
-    }
+    .jury-home-photo, .jury-photo { width: 100% !important; height: 220px !important; min-height: 220px !important; max-height: 220px !important; aspect-ratio: auto !important; overflow: hidden !important; box-sizing: border-box !important; }
+    .jury-home-card, .jury-current-card { padding-left: 18px !important; padding-right: 18px !important; }
+    .jury-home-card strong, .jury-current-card strong { font-size: 18px !important; }
+    .jury-home-photo img, .jury-photo img { width: 100% !important; height: 100% !important; min-width: 100% !important; min-height: 100% !important; max-width: none !important; max-height: none !important; object-fit: cover !important; display: block !important; }
   `;
   document.head.appendChild(style);
 }
-
 function setupJuryArchiveCarousel() {
   const frame = document.querySelector('.jury-carousel-frame');
   if (!frame) return;
-  const images = [
-    '2023_jurat_cambrajpg.jpg',
-    '2023_jurat_cant.jpg',
-    '2025_Jurat_cant.JPG',
-    '2025_jurat_cambra.JPG',
-    'jurat21.jpg',
-    'jurat32.jpg',
-    'jurat_cambra2.jpg',
-    'jurat_cant2.jpg',
-    'jurat-historic-01.jpg'
-  ];
+  const images = ['2023_jurat_cambrajpg.jpg','2023_jurat_cant.jpg','2025_Jurat_cant.JPG','2025_jurat_cambra.JPG','jurat21.jpg','jurat32.jpg','jurat_cambra2.jpg','jurat_cant2.jpg','jurat-historic-01.jpg'];
   const controls = frame.querySelectorAll('.jury-carousel-control');
   frame.querySelectorAll('.jury-carousel-slide').forEach(slide => slide.remove());
-  images.forEach((file, index) => {
-    const slide = document.createElement('div');
-    slide.className = 'jury-carousel-slide' + (index === 0 ? ' active' : '');
-    const img = document.createElement('img');
-    img.src = '../images/jurat/historic/' + file;
-    img.alt = 'Fotografia històrica del jurat';
-    img.loading = index === 0 ? 'eager' : 'lazy';
-    slide.appendChild(img);
-    frame.insertBefore(slide, controls[0]);
-  });
-
-  const slides = frame.querySelectorAll('.jury-carousel-slide');
-  const prev = frame.querySelector('.jury-carousel-control.prev');
-  const next = frame.querySelector('.jury-carousel-control.next');
-  let current = 0;
-  const show = (n) => {
-    current = (n + slides.length) % slides.length;
-    slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
-  };
-  prev?.addEventListener('click', () => show(current - 1));
-  next?.addEventListener('click', () => show(current + 1));
-
-  const style = document.createElement('style');
-  style.textContent = `
-    .jury-carousel-slide img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain !important;
-      display: block !important;
-    }
-    .jury-carousel-slide { opacity: 1 !important; }
-  `;
-  document.head.appendChild(style);
+  images.forEach((file, index) => { const slide = document.createElement('div'); slide.className = 'jury-carousel-slide' + (index === 0 ? ' active' : ''); const img = document.createElement('img'); img.src = '../images/jurat/historic/' + file; img.alt = 'Fotografia històrica del jurat'; img.loading = index === 0 ? 'eager' : 'lazy'; slide.appendChild(img); frame.insertBefore(slide, controls[0]); });
+  const slides = frame.querySelectorAll('.jury-carousel-slide'); const prev = frame.querySelector('.jury-carousel-control.prev'); const next = frame.querySelector('.jury-carousel-control.next'); let current = 0;
+  const show = n => { current = (n + slides.length) % slides.length; slides.forEach((slide, i) => slide.classList.toggle('active', i === current)); };
+  prev?.addEventListener('click', () => show(current - 1)); next?.addEventListener('click', () => show(current + 1));
+  const style = document.createElement('style'); style.textContent = `.jury-carousel-slide img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}.jury-carousel-slide{opacity:1!important}`; document.head.appendChild(style);
 }
-
 function setupVenueCarousel() {
-  const frames = document.querySelectorAll('.venue-carousel-frame');
-  if (!frames.length) return;
-  const images = [
-    '2017-09-29_Casino Prado_1.jpg',
-    "25-04-12_Casino Prado-Porta d'entrada_2.jpg",
-    '30-04-12_Casino_Prado_Porta_Sal¢-Teatre.jpg',
-    'Prado_Fa‡ana_Detall_1.jpg',
-    'Prado_Fa‡ana_Pano.jpg',
-    'Prado_int_1.jpg',
-    'Prado_int_2.jpg'
-  ];
+  const frames = document.querySelectorAll('.venue-carousel-frame'); if (!frames.length) return;
+  const images = ['2017-09-29_Casino Prado_1.jpg', "25-04-12_Casino Prado-Porta d'entrada_2.jpg", '30-04-12_Casino_Prado_Porta_Sal¢-Teatre.jpg', 'Prado_Fa‡ana_Detall_1.jpg', 'Prado_Fa‡ana_Pano.jpg', 'Prado_int_1.jpg', 'Prado_int_2.jpg'];
   frames.forEach(frame => {
-    const basePath = frame.dataset.carouselPath || 'images/casino-prado/';
-    const controls = frame.querySelectorAll('.venue-carousel-control');
-    frame.querySelectorAll('.venue-carousel-slide').forEach(slide => slide.remove());
-    images.forEach((file, index) => {
-      const slide = document.createElement('div');
-      slide.className = 'venue-carousel-slide' + (index === 0 ? ' active' : '');
-      const img = document.createElement('img');
-      img.src = basePath + file;
-      img.alt = 'Fotografia del Casino Prado Suburense';
-      img.loading = index === 0 ? 'eager' : 'lazy';
-      slide.appendChild(img);
-      frame.insertBefore(slide, controls[0]);
-    });
-    const slides = frame.querySelectorAll('.venue-carousel-slide');
-    const prev = frame.querySelector('.venue-carousel-control.prev');
-    const next = frame.querySelector('.venue-carousel-control.next');
-    let current = 0;
-    const show = (n) => {
-      current = (n + slides.length) % slides.length;
-      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
-    };
-    prev?.addEventListener('click', () => show(current - 1));
-    next?.addEventListener('click', () => show(current + 1));
+    const basePath = frame.dataset.carouselPath || 'images/casino-prado/'; const controls = frame.querySelectorAll('.venue-carousel-control'); frame.querySelectorAll('.venue-carousel-slide').forEach(slide => slide.remove());
+    images.forEach((file, index) => { const slide = document.createElement('div'); slide.className = 'venue-carousel-slide' + (index === 0 ? ' active' : ''); const img = document.createElement('img'); img.src = basePath + file; img.alt = 'Fotografia del Casino Prado Suburense'; img.loading = index === 0 ? 'eager' : 'lazy'; slide.appendChild(img); frame.insertBefore(slide, controls[0]); });
+    const slides = frame.querySelectorAll('.venue-carousel-slide'); const prev = frame.querySelector('.venue-carousel-control.prev'); const next = frame.querySelector('.venue-carousel-control.next'); let current = 0;
+    const show = n => { current = (n + slides.length) % slides.length; slides.forEach((slide, i) => slide.classList.toggle('active', i === current)); };
+    prev?.addEventListener('click', () => show(current - 1)); next?.addEventListener('click', () => show(current + 1));
   });
-  const style = document.createElement('style');
-  style.textContent = `
-    .venue-carousel-frame {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      min-height: 360px;
-      background: #20201d;
-      overflow: hidden;
-    }
-    .venue-carousel-slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
-    }
-    .venue-carousel-slide.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .venue-carousel-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .venue-carousel-control {
-      position: absolute;
-      top: 50%;
-      z-index: 2;
-      transform: translateY(-50%);
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(245,241,232,.75);
-      background: rgba(32,32,29,.55);
-      color: #f5f1e8;
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .venue-carousel-control:hover { background: rgba(32,32,29,.8); }
-    .venue-carousel-control.prev { left: 16px; }
-    .venue-carousel-control.next { right: 16px; }
-    @media(max-width:600px) {
-      .venue-carousel-frame { min-height: 250px; }
-      .venue-carousel-control { width: 36px; height: 36px; font-size: 20px; }
-    }
-  `;
-  document.head.appendChild(style);
+  const style = document.createElement('style'); style.textContent = `.venue-carousel-frame{position:relative;width:100%;aspect-ratio:16/9;min-height:360px;background:#20201d;overflow:hidden}.venue-carousel-slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .25s ease}.venue-carousel-slide.active{opacity:1;pointer-events:auto}.venue-carousel-slide img{width:100%;height:100%;object-fit:cover;display:block}.venue-carousel-control{position:absolute;top:50%;z-index:2;transform:translateY(-50%);width:42px;height:42px;border:1px solid rgba(245,241,232,.75);background:rgba(32,32,29,.55);color:#f5f1e8;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}.venue-carousel-control:hover{background:rgba(32,32,29,.8)}.venue-carousel-control.prev{left:16px}.venue-carousel-control.next{right:16px}@media(max-width:600px){.venue-carousel-frame{min-height:250px}.venue-carousel-control{width:36px;height:36px;font-size:20px}}`; document.head.appendChild(style);
 }
 
 setupWinnerHistory();
@@ -272,3 +118,10 @@ applySocialIcons();
 normalizeJuryPhotos();
 setupJuryArchiveCarousel();
 setupVenueCarousel();
+
+if (!document.querySelector('script[data-i18n-loader]')) {
+  const i18nScript = document.createElement('script');
+  i18nScript.src = new URL('i18n.js', document.currentScript?.src || new URL('js/script.js', document.baseURI)).href;
+  i18nScript.dataset.i18nLoader = 'true';
+  document.head.appendChild(i18nScript);
+}
