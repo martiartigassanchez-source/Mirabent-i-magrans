@@ -24,13 +24,15 @@
       ['1r Premi','1er Premio'],['2n Premi','2º Premio'],['3r Premi','3er Premio'],['1r premi','1er premio'],['2n premi','2º premio'],['3r premi','3er premio'],
       ['Fotografia del guanyador','Fotografía del ganador'],['Fotografia','Fotografía'],['fotografia','fotografía'],['Foto del membre','Foto del miembro'],['Foto del jurat','Foto del jurado'],
       ['Palmarès pendent de completar','Palmarés pendiente de completar'],['Premis especials','Premios especiales'],['Premi especial','Premio especial'],['Premi AOS','Premio AOS'],
-      ['Edició','Edición'],['edició','edición'],['Jurat','Jurado'],['jurat','jurado'],['setembre','septiembre'],['novembre','noviembre'],['d\'octubre','de octubre'],['octubre','octubre'],
+      ['Edició','Edición'],['edició','edición'],['Jurat','Jurado'],['jurat','jurado'],['Història','Historia'],['història','historia'],['Concurs','Concurso'],['concurs','concurso'],
+      ['setembre','septiembre'],['novembre','noviembre'],['d\'octubre','de octubre'],['octubre','octubre'],
       ['Imatge anterior','Imagen anterior'],['Imatge següent','Imagen siguiente'],['Fotografia anterior','Fotografía anterior'],['Fotografia següent','Fotografía siguiente'],['guanyadors','ganadores'],['guanyador','ganador']
     ] : [
       ['1r Premi','1st Prize'],['2n Premi','2nd Prize'],['3r Premi','3rd Prize'],['1r premi','1st prize'],['2n premi','2nd prize'],['3r premi','3rd prize'],
       ['Fotografia del guanyador','Winner’s photograph'],['Fotografia','Photograph'],['fotografia','photograph'],['Foto del membre','Member photo'],['Foto del jurat','Jury photo'],
       ['Palmarès pendent de completar','Prize record to be completed'],['Premis especials','Special prizes'],['Premi especial','Special prize'],['Premi AOS','AOS Prize'],
-      ['Edició','Edition'],['edició','edition'],['Jurat','Jury'],['jurat','jury'],['setembre','September'],['novembre','November'],['d\'octubre','of October'],['octubre','October'],
+      ['Edició','Edition'],['edició','edition'],['Jurat','Jury'],['jurat','jury'],['Història','History'],['història','history'],['Concurs','Contest'],['concurs','contest'],
+      ['setembre','September'],['novembre','November'],['d\'octubre','of October'],['octubre','October'],
       ['Imatge anterior','Previous image'],['Imatge següent','Next image'],['Fotografia anterior','Previous photograph'],['Fotografia següent','Next photograph'],['guanyadors','winners'],['guanyador','winner']
     ];
     let result = value;
