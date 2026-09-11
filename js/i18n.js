@@ -1,122 +1,66 @@
 (function () {
   const load = src => new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); });
-  const originalText = new WeakMap();
-  const originalHTML = new WeakMap();
-  const originalAttrs = new WeakMap();
-  const originalTitle = new WeakMap();
+  const originalText = new WeakMap(), originalHTML = new WeakMap(), originalAttrs = new WeakMap(), originalTitle = new WeakMap();
 
   function ensureLanguageSelector() {
-    const navLinks = document.querySelector('.nav-links');
-    if (!navLinks) return null;
+    const navLinks = document.querySelector('.nav-links'); if (!navLinks) return null;
     let switcher = navLinks.querySelector('.language-switcher');
     if (switcher) return switcher;
-    switcher = document.createElement('div');
-    switcher.className = 'language-switcher';
-    switcher.setAttribute('aria-label', 'Idioma');
+    switcher = document.createElement('div'); switcher.className = 'language-switcher'; switcher.setAttribute('aria-label', 'Idioma');
     switcher.innerHTML = '<button type="button" data-lang="ca">CA</button><button type="button" data-lang="es">ES</button><button type="button" data-lang="en">EN</button>';
-    const cta = navLinks.querySelector('.nav-cta');
-    if (cta) navLinks.insertBefore(switcher, cta); else navLinks.appendChild(switcher);
+    const cta = navLinks.querySelector('.nav-cta'); if (cta) navLinks.insertBefore(switcher, cta); else navLinks.appendChild(switcher);
     return switcher;
   }
 
   function buildDictionary(lang) {
-    const base = window.MirabentTranslations?.[lang] || {};
-    const extra = window.MirabentPageTranslations?.[lang] || {};
-    const dict = Object.assign({}, base, extra);
-    if (lang === 'en') {
-      Object.keys(dict).forEach(key => {
-        if (typeof dict[key] === 'string') dict[key] = dict[key].replace(/\bcompetition\b/gi, 'contest');
-      });
-    }
+    const dict = Object.assign({}, window.MirabentTranslations?.[lang] || {}, window.MirabentPageTranslations?.[lang] || {});
+    if (lang === 'en') Object.keys(dict).forEach(key => { if (typeof dict[key] === 'string') dict[key] = dict[key].replace(/\bCompetition\b/g, 'Contest').replace(/\bcompetition\b/g, 'contest'); });
     return dict;
   }
 
   function translatePage(lang) {
-    const dict = buildDictionary(lang);
-    if (!Object.keys(dict).length) return;
+    const dict = buildDictionary(lang); if (!Object.keys(dict).length) return;
     document.documentElement.lang = lang;
 
     document.body.querySelectorAll('*').forEach(el => {
       if (el.closest('.language-switcher')) return;
       if (!originalHTML.has(el)) originalHTML.set(el, el.innerHTML);
-      const original = originalHTML.get(el);
-      const translated = dict[original];
-      if (translated != null && original.includes('<')) {
-        el.innerHTML = translated;
-        el.setAttribute('data-i18n-html', 'true');
-      } else if (el.hasAttribute('data-i18n-html')) {
-        el.innerHTML = original;
-        el.removeAttribute('data-i18n-html');
-      }
+      const original = originalHTML.get(el), translated = dict[original];
+      if (translated != null && original.includes('<')) { el.innerHTML = translated; el.setAttribute('data-i18n-html','true'); }
+      else if (el.hasAttribute('data-i18n-html')) { el.innerHTML = original; el.removeAttribute('data-i18n-html'); }
     });
 
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    let node;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let node;
     while ((node = walker.nextNode())) {
       const parent = node.parentElement;
       if (!parent || ['SCRIPT','STYLE','NOSCRIPT'].includes(parent.tagName) || parent.closest('.language-switcher') || parent.closest('[data-i18n-html="true"]')) continue;
       if (!originalText.has(node)) originalText.set(node, node.nodeValue);
-      const raw = originalText.get(node), trimmed = raw.trim();
-      if (!trimmed) continue;
-      const translated = dict[raw] ?? dict[trimmed];
-      if (translated == null) continue;
-      const start = raw.indexOf(trimmed), end = start + trimmed.length;
-      node.nodeValue = raw.slice(0, start) + translated + raw.slice(end);
+      const raw = originalText.get(node), trimmed = raw.trim(); if (!trimmed) continue;
+      const translated = dict[raw] ?? dict[trimmed]; if (translated == null) continue;
+      const start = raw.indexOf(trimmed), end = start + trimmed.length; node.nodeValue = raw.slice(0,start) + translated + raw.slice(end);
     }
 
     document.querySelectorAll('[aria-label],[alt],[title]').forEach(el => {
-      if (!originalAttrs.has(el)) originalAttrs.set(el, {
-        'aria-label': el.getAttribute('aria-label'),
-        alt: el.getAttribute('alt'),
-        title: el.getAttribute('title')
-      });
-      const attrs = originalAttrs.get(el);
-      Object.entries(attrs).forEach(([attr, original]) => {
-        if (!original) return;
-        const translated = dict[original];
-        if (translated != null) el.setAttribute(attr, translated);
-      });
+      if (!originalAttrs.has(el)) originalAttrs.set(el, {'aria-label':el.getAttribute('aria-label'),alt:el.getAttribute('alt'),title:el.getAttribute('title')});
+      Object.entries(originalAttrs.get(el)).forEach(([attr, original]) => { if (!original) return; const translated = dict[original]; if (translated != null) el.setAttribute(attr, translated); });
     });
 
-    document.querySelectorAll('title').forEach(el => {
-      if (!originalTitle.has(el)) originalTitle.set(el, el.textContent.trim());
-      const original = originalTitle.get(el);
-      if (dict[original]) el.textContent = dict[original];
-    });
-
-    document.querySelectorAll('meta[name="description"]').forEach(el => {
-      const original = el.getAttribute('data-i18n-original') || el.getAttribute('content');
-      if (!el.hasAttribute('data-i18n-original')) el.setAttribute('data-i18n-original', original);
-      if (dict[original]) el.setAttribute('content', dict[original]);
-    });
+    document.querySelectorAll('title').forEach(el => { if (!originalTitle.has(el)) originalTitle.set(el, el.textContent.trim()); const original = originalTitle.get(el); if (dict[original]) el.textContent = dict[original]; });
+    document.querySelectorAll('meta[name="description"]').forEach(el => { const original = el.getAttribute('data-i18n-original') || el.getAttribute('content'); if (!el.hasAttribute('data-i18n-original')) el.setAttribute('data-i18n-original', original); if (dict[original]) el.setAttribute('content', dict[original]); });
   }
 
   function setupLanguageSelector() {
-    const switcher = ensureLanguageSelector();
-    if (!switcher) return;
+    const switcher = ensureLanguageSelector(); if (!switcher) return;
     const buttons = switcher.querySelectorAll('button[data-lang]');
     const updateActive = lang => buttons.forEach(button => button.classList.toggle('active', button.dataset.lang === lang));
-    buttons.forEach(button => {
-      if (button.dataset.bound === 'true') return;
-      button.dataset.bound = 'true';
-      button.addEventListener('click', () => {
-        const lang = button.dataset.lang;
-        localStorage.setItem('mirabent-language', lang);
-        translatePage(lang);
-        updateActive(lang);
-      });
-    });
-    const saved = localStorage.getItem('mirabent-language');
-    const initial = ['ca','es','en'].includes(saved) ? saved : 'ca';
-    translatePage(initial);
-    updateActive(initial);
+    buttons.forEach(button => { if (button.dataset.bound === 'true') return; button.dataset.bound='true'; button.addEventListener('click', () => { const lang=button.dataset.lang; localStorage.setItem('mirabent-language',lang); translatePage(lang); updateActive(lang); }); });
+    const saved = localStorage.getItem('mirabent-language'), initial = ['ca','es','en'].includes(saved) ? saved : 'ca';
+    translatePage(initial); updateActive(initial);
   }
 
-  const style = document.createElement('style');
-  style.textContent = `.language-switcher{display:flex;align-items:center;gap:2px;margin-left:4px}.language-switcher button{border:0;background:transparent;color:#20201d;font:500 10px 'DM Sans',Arial,sans-serif;letter-spacing:.08em;padding:5px 3px;cursor:pointer;opacity:.45}.language-switcher button:hover,.language-switcher button.active{opacity:1}.language-switcher button.active{text-decoration:underline;text-underline-offset:4px}@media(max-width:850px){.language-switcher{margin-left:0}.language-switcher button{padding:0 3px}}`;
-  document.head.appendChild(style);
+  const style = document.createElement('style'); style.textContent = `.language-switcher{display:flex;align-items:center;gap:2px;margin-left:4px}.language-switcher button{border:0;background:transparent;color:#20201d;font:500 10px 'DM Sans',Arial,sans-serif;letter-spacing:.08em;padding:5px 3px;cursor:pointer;opacity:.45}.language-switcher button:hover,.language-switcher button.active{opacity:1}.language-switcher button.active{text-decoration:underline;text-underline-offset:4px}@media(max-width:850px){.language-switcher{margin-left:0}.language-switcher button{padding:0 3px}}`; document.head.appendChild(style);
 
-  const base = new URL('translations.js', document.currentScript?.src || new URL('js/i18n.js', document.baseURI)).href;
-  const page = new URL('page-translations.js', document.currentScript?.src || new URL('js/i18n.js', document.baseURI)).href;
+  const scriptBase = document.currentScript?.src || new URL('js/i18n.js', document.baseURI);
+  const base = new URL('translations.js', scriptBase).href, page = new URL('page-translations.js', scriptBase).href;
   load(base).then(() => load(page)).then(setupLanguageSelector).catch(() => {});
 })();
