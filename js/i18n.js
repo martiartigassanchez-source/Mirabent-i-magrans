@@ -18,6 +18,26 @@
     return dict;
   }
 
+  function tokenTranslate(value, lang) {
+    if (!value || lang === 'ca') return value;
+    const tokens = lang === 'es' ? [
+      ['1r Premi','1er Premio'],['2n Premi','2º Premio'],['3r Premi','3er Premio'],['1r premi','1er premio'],['2n premi','2º premio'],['3r premi','3er premio'],
+      ['Fotografia del guanyador','Fotografía del ganador'],['Fotografia','Fotografía'],['fotografia','fotografía'],['Foto del membre','Foto del miembro'],['Foto del jurat','Foto del jurado'],
+      ['Palmarès pendent de completar','Palmarés pendiente de completar'],['Premis especials','Premios especiales'],['Premi especial','Premio especial'],['Premi AOS','Premio AOS'],
+      ['Edició','Edición'],['edició','edición'],['Jurat','Jurado'],['jurat','jurado'],['setembre','septiembre'],['novembre','noviembre'],['d\'octubre','de octubre'],['octubre','octubre'],
+      ['Imatge anterior','Imagen anterior'],['Imatge següent','Imagen siguiente'],['Fotografia anterior','Fotografía anterior'],['Fotografia següent','Fotografía siguiente'],['guanyadors','ganadores'],['guanyador','ganador']
+    ] : [
+      ['1r Premi','1st Prize'],['2n Premi','2nd Prize'],['3r Premi','3rd Prize'],['1r premi','1st prize'],['2n premi','2nd prize'],['3r premi','3rd prize'],
+      ['Fotografia del guanyador','Winner’s photograph'],['Fotografia','Photograph'],['fotografia','photograph'],['Foto del membre','Member photo'],['Foto del jurat','Jury photo'],
+      ['Palmarès pendent de completar','Prize record to be completed'],['Premis especials','Special prizes'],['Premi especial','Special prize'],['Premi AOS','AOS Prize'],
+      ['Edició','Edition'],['edició','edition'],['Jurat','Jury'],['jurat','jury'],['setembre','September'],['novembre','November'],['d\'octubre','of October'],['octubre','October'],
+      ['Imatge anterior','Previous image'],['Imatge següent','Next image'],['Fotografia anterior','Previous photograph'],['Fotografia següent','Next photograph'],['guanyadors','winners'],['guanyador','winner']
+    ];
+    let result = value;
+    tokens.forEach(([from, to]) => { result = result.split(from).join(to); });
+    return result;
+  }
+
   function translatePage(lang) {
     const dict = buildDictionary(lang); if (!Object.keys(dict).length) return;
     document.documentElement.lang = lang;
@@ -36,17 +56,18 @@
       if (!parent || ['SCRIPT','STYLE','NOSCRIPT'].includes(parent.tagName) || parent.closest('.language-switcher') || parent.closest('[data-i18n-html="true"]')) continue;
       if (!originalText.has(node)) originalText.set(node, node.nodeValue);
       const raw = originalText.get(node), trimmed = raw.trim(); if (!trimmed) continue;
-      const translated = dict[raw] ?? dict[trimmed]; if (translated == null) continue;
+      const translated = dict[raw] ?? dict[trimmed] ?? tokenTranslate(trimmed, lang);
+      if (translated == null) continue;
       const start = raw.indexOf(trimmed), end = start + trimmed.length; node.nodeValue = raw.slice(0,start) + translated + raw.slice(end);
     }
 
     document.querySelectorAll('[aria-label],[alt],[title]').forEach(el => {
       if (!originalAttrs.has(el)) originalAttrs.set(el, {'aria-label':el.getAttribute('aria-label'),alt:el.getAttribute('alt'),title:el.getAttribute('title')});
-      Object.entries(originalAttrs.get(el)).forEach(([attr, original]) => { if (!original) return; const translated = dict[original]; if (translated != null) el.setAttribute(attr, translated); });
+      Object.entries(originalAttrs.get(el)).forEach(([attr, original]) => { if (!original) return; const translated = dict[original] ?? tokenTranslate(original, lang); if (translated != null) el.setAttribute(attr, translated); });
     });
 
-    document.querySelectorAll('title').forEach(el => { if (!originalTitle.has(el)) originalTitle.set(el, el.textContent.trim()); const original = originalTitle.get(el); if (dict[original]) el.textContent = dict[original]; });
-    document.querySelectorAll('meta[name="description"]').forEach(el => { const original = el.getAttribute('data-i18n-original') || el.getAttribute('content'); if (!el.hasAttribute('data-i18n-original')) el.setAttribute('data-i18n-original', original); if (dict[original]) el.setAttribute('content', dict[original]); });
+    document.querySelectorAll('title').forEach(el => { if (!originalTitle.has(el)) originalTitle.set(el, el.textContent.trim()); const original = originalTitle.get(el); const translated = dict[original] ?? tokenTranslate(original, lang); if (translated) el.textContent = translated; });
+    document.querySelectorAll('meta[name="description"]').forEach(el => { const original = el.getAttribute('data-i18n-original') || el.getAttribute('content'); if (!el.hasAttribute('data-i18n-original')) el.setAttribute('data-i18n-original', original); const translated = dict[original] ?? tokenTranslate(original, lang); if (translated) el.setAttribute('content', translated); });
   }
 
   function setupLanguageSelector() {
