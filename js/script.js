@@ -6,7 +6,7 @@ toggle?.addEventListener('click', () => { const open = links.classList.toggle('o
 links?.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { links.classList.remove('open'); toggle?.setAttribute('aria-expanded', 'false'); }); });
 document.querySelectorAll('.nav-links a[href$="el-concurs.html"]').forEach(link => link.remove());
 const instagramIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>';
-const facebookIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.7.3-1 1-1Z" fill="currentColor"/></svg>';
+const facebookIcon = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v4h3.2l.8-4H13V9c0-.7.3-1 1-1Z" fill="currentColor"/></svg>';
 function applySocialIcons(root = document) {
   root.querySelectorAll('.footer-contact > div, .contact-detail').forEach(item => {
     const label = item.querySelector('span')?.textContent.trim().toLowerCase();
@@ -62,21 +62,54 @@ const specialAwards = {
   '2007': ['Premi Cançó catalana — Alícia Ferrer'],
   '2006': ['Premi Cançó catalana — Inés Moraleda']
 };
+function getEdition(year) {
+  const noContest = new Set([2015, 2016, 2020, 2021]);
+  let edition = 0;
+  for (let y = 1993; y <= year; y++) if (!noContest.has(y)) edition++;
+  return edition;
+}
 function setupWinnerHistory() {
   const years = document.querySelector('.winner-years');
   if (!years) return;
   document.querySelectorAll('main img').forEach(img => { if (!img.closest('.winner-years')) img.remove(); });
   years.querySelectorAll('details').forEach(detail => {
-    const year = detail.querySelector('summary')?.textContent.trim();
+    const summary = detail.querySelector('summary');
+    const year = summary?.textContent.trim();
     if (!year) return;
+    const numericYear = parseInt(year, 10);
+    const edition = getEdition(numericYear);
+    summary.innerHTML = `<span>${year}</span><small>${edition}a edició</small>`;
+    summary.classList.add('winner-year-summary');
     detail.querySelectorAll('.special-note').forEach(note => note.remove());
+    detail.querySelectorAll('.winner-column').forEach(column => {
+      const entries = [...column.querySelectorAll('.winner-entry')];
+      entries.forEach(entry => entry.querySelector('.winner-photo')?.remove());
+      const oldPhoto = column.querySelector('.winner-group-photo');
+      oldPhoto?.remove();
+      const photo = document.createElement('div');
+      photo.className = 'winner-group-photo';
+      photo.textContent = 'Fotografia dels guanyadors';
+      const insertAfter = entries[Math.min(2, entries.length - 1)];
+      if (insertAfter) insertAfter.after(photo);
+    });
     const awards = specialAwards[year];
-    if (!awards?.length) return;
-    const note = document.createElement('div');
-    note.className = 'special-note';
-    note.innerHTML = '<span>Premis especials i mencions</span>' + awards.map(award => `<p>${award}</p>`).join('');
-    detail.appendChild(note);
+    if (awards?.length) {
+      const note = document.createElement('div');
+      note.className = 'special-note';
+      note.innerHTML = '<span>Premis especials i mencions</span>' + awards.map(award => `<p>${award}</p>`).join('');
+      detail.appendChild(note);
+    }
   });
+  const style = document.createElement('style');
+  style.textContent = `
+    .winner-years .winner-year-summary{gap:20px}
+    .winner-years .winner-year-summary small{font-family:'DM Sans',Arial,sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;opacity:.72;margin-left:auto}
+    .winner-group-photo{width:100%;aspect-ratio:4/3;background:#d5d0c5;display:flex;align-items:center;justify-content:center;color:#6f6b63;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
+    .winner-entry{margin-bottom:18px}
+    .winner-entry strong{margin-bottom:0}
+    @media(max-width:700px){.winner-years .winner-year-summary{align-items:baseline}.winner-years .winner-year-summary small{font-size:11px}}
+  `;
+  document.head.appendChild(style);
 }
 function normalizeJuryPhotos() {
   const style = document.createElement('style');
