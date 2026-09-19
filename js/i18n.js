@@ -62,7 +62,7 @@
     const isHistory=path.endsWith('/historia.html')||path.includes('/historia/');
     document.documentElement.lang=lang;
     document.body.querySelectorAll('*').forEach(el=>{
-      if(el.closest('.language-switcher'))return;
+      if(el.closest('.language-switcher')||el.closest('[data-i18n-no-translate]'))return;
       if(!originalHTML.has(el))originalHTML.set(el,el.innerHTML);
       const original=originalHTML.get(el), translated=dict[original];
       if(translated!=null&&original.includes('<')){el.innerHTML=translated;el.setAttribute('data-i18n-html','true');}
