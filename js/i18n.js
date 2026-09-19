@@ -73,7 +73,7 @@
       const p=n.parentElement;if(!p||['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName)||p.closest('.language-switcher')||p.closest('[data-i18n-html="true"]')||p.closest('a[href^="mailto:"]'))continue;
       if(!originalText.has(n))originalText.set(n,n.nodeValue);
       const raw=originalText.get(n),trim=raw.trim();if(!trim)continue;
-      const translated=dict[raw]??dict[trim]??tokenTranslate(trim,lang,isHistory);if(translated==null)continue;
+      const key=p.getAttribute('data-i18n-key');const translated=(key&&dict[key])??dict[raw]??dict[trim]??tokenTranslate(trim,lang,isHistory);if(translated==null)continue;
       const s=raw.indexOf(trim),e=s+trim.length;n.nodeValue=raw.slice(0,s)+translated+raw.slice(e);
     }
     document.querySelectorAll('[aria-label],[alt],[title]').forEach(el=>{
