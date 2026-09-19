@@ -70,7 +70,7 @@
     });
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
     while((n=walker.nextNode())){
-      const p=n.parentElement;if(!p||['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName)||p.closest('.language-switcher')||p.closest('[data-i18n-html="true"]'))continue;
+      const p=n.parentElement;if(!p||['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName)||p.closest('.language-switcher')||p.closest('[data-i18n-html="true"]')||p.closest('a[href^="mailto:"]'))continue;
       if(!originalText.has(n))originalText.set(n,n.nodeValue);
       const raw=originalText.get(n),trim=raw.trim();if(!trim)continue;
       const translated=dict[raw]??dict[trim]??tokenTranslate(trim,lang,isHistory);if(translated==null)continue;
