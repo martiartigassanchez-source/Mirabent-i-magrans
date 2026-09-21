@@ -68,6 +68,13 @@ function getEdition(year) {
   for (let y = 1993; y <= year; y++) if (!noContest.has(y)) edition++;
   return edition;
 }
+const winnerHistoryPhotos = {
+  '2025': { 'Música de cambra': 'cambra 2025.JPG', 'Cant': 'cant 2025.JPG' },
+  '2024': { 'Música de cambra': 'guanyadors 2024cambra-min.jpg', 'Cant': 'guanyadors 2024cant-min.jpeg' },
+  '2023': { 'Música de cambra': '2023 cambra-min.jpeg', 'Cant': 'cant2023-min.jpeg' },
+  '2022': { 'Cant': 'cant 22-min.jpg' },
+  '2019': { 'Música de cambra': '19 cambra-min.JPG', 'Cant': 'Premis Cant 2019 -min.jpg' }
+};
 function setupWinnerHistory() {
   const years = document.querySelector('.winner-years');
   if (!years) return;
@@ -86,11 +93,18 @@ function setupWinnerHistory() {
       entries.forEach(entry => entry.querySelector('.winner-photo')?.remove());
       const oldPhoto = column.querySelector('.winner-group-photo');
       oldPhoto?.remove();
-      const photo = document.createElement('div');
-      photo.className = 'winner-group-photo';
-      photo.textContent = 'Fotografia dels guanyadors';
-      const insertAfter = entries[Math.min(2, entries.length - 1)];
-      if (insertAfter) insertAfter.after(photo);
+      const photoFile = winnerHistoryPhotos[year]?.[column.querySelector('h3')?.textContent.trim()];
+      if (photoFile) {
+        const photo = document.createElement('div');
+        photo.className = 'winner-group-photo';
+        const img = document.createElement('img');
+        img.src = '../images/palmares_historic/' + encodeURIComponent(photoFile);
+        img.alt = 'Fotografia dels guanyadors de ' + year + ' — ' + column.querySelector('h3')?.textContent.trim();
+        img.loading = 'lazy';
+        photo.appendChild(img);
+        const insertAfter = entries[Math.min(2, entries.length - 1)];
+        if (insertAfter) insertAfter.after(photo);
+      }
     });
     const awards = specialAwards[year];
     if (awards?.length) {
@@ -104,7 +118,8 @@ function setupWinnerHistory() {
   style.textContent = `
     .winner-years .winner-year-summary{gap:20px}
     .winner-years .winner-year-summary small{font-family:'DM Sans',Arial,sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;opacity:.72;margin-left:auto}
-    .winner-group-photo{width:100%;aspect-ratio:3/2;background:#d5d0c5;display:flex;align-items:center;justify-content:center;color:#6f6b63;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
+    .winner-group-photo{width:100%;aspect-ratio:3/2;background:#d5d0c5;display:flex;align-items:center;justify-content:center;color:#6f6b63;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:24px;margin-bottom:4px;overflow:hidden}
+    .winner-group-photo img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
     .winner-entry{margin-bottom:18px}
     .winner-entry strong{margin-bottom:0}
     @media(max-width:700px){.winner-years .winner-year-summary{align-items:baseline}.winner-years .winner-year-summary small{font-size:11px}}
