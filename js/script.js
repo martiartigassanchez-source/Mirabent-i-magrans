@@ -104,7 +104,7 @@ function setupWinnerHistory() {
   style.textContent = `
     .winner-years .winner-year-summary{gap:20px}
     .winner-years .winner-year-summary small{font-family:'DM Sans',Arial,sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;opacity:.72;margin-left:auto}
-    .winner-group-photo{width:100%;aspect-ratio:4/3;background:#d5d0c5;display:flex;align-items:center;justify-content:center;color:#6f6b63;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
+    .winner-group-photo{width:100%;aspect-ratio:3/2;background:#d5d0c5;display:flex;align-items:center;justify-content:center;color:#6f6b63;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
     .winner-entry{margin-bottom:18px}
     .winner-entry strong{margin-bottom:0}
     @media(max-width:700px){.winner-years .winner-year-summary{align-items:baseline}.winner-years .winner-year-summary small{font-size:11px}}
