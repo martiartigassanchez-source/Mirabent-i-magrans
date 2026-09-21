@@ -93,7 +93,9 @@ function setupWinnerHistory() {
       entries.forEach(entry => entry.querySelector('.winner-photo')?.remove());
       const oldPhoto = column.querySelector('.winner-group-photo');
       oldPhoto?.remove();
-      const photoFile = winnerHistoryPhotos[year]?.[column.querySelector('h3')?.textContent.trim()];
+      const category = column.querySelector('h3')?.textContent.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const photoCategory = category.includes('cant') ? 'Cant' : category.includes('cambra') ? 'Música de cambra' : null;
+      const photoFile = photoCategory ? winnerHistoryPhotos[year]?.[photoCategory] : null;
       if (photoFile) {
         const photo = document.createElement('div');
         photo.className = 'winner-group-photo';
