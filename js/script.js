@@ -96,19 +96,23 @@ function setupWinnerHistory() {
       const entries = [...column.querySelectorAll('.winner-entry')];
       const oldPhoto = column.querySelector('.winner-group-photo');
       oldPhoto?.remove();
+      const placeholders = [...column.querySelectorAll('.winner-photo')];
       const category = column.querySelector('h3')?.textContent.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const photoCategory = category.includes('cant') ? 'Cant' : category.includes('cambra') ? 'Música de cambra' : null;
       const photoFile = photoCategory ? winnerHistoryPhotos[year]?.[photoCategory] : null;
       if (photoFile) {
+        placeholders.forEach(placeholder => placeholder.remove());
         const photo = document.createElement('div');
         photo.className = 'winner-group-photo';
         const img = document.createElement('img');
-        img.src = '../images/palmares_historic/' + encodeURIComponent(photoFile);
+        img.src = '../images/palmares_historic/' + encodeURIComponent(year) + '/' + encodeURIComponent(photoFile);
         img.alt = 'Fotografia dels guanyadors de ' + year + ' — ' + column.querySelector('h3')?.textContent.trim();
         img.loading = 'lazy';
         photo.appendChild(img);
         const insertAfter = entries[Math.min(2, entries.length - 1)];
         if (insertAfter) insertAfter.after(photo);
+      } else {
+        placeholders.slice(1).forEach(placeholder => placeholder.remove());
       }
     });
     const awards = specialAwards[year];
