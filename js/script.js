@@ -73,7 +73,11 @@ const winnerHistoryPhotos = {
   '2024': { 'Música de cambra': 'guanyadors 2024cambra-min.jpg', 'Cant': 'guanyadors 2024cant-min.jpeg' },
   '2023': { 'Música de cambra': '2023 cambra-min.jpeg', 'Cant': 'cant2023-min.jpeg' },
   '2022': { 'Cant': 'cant 22-min.jpg' },
-  '2019': { 'Música de cambra': '19 cambra-min.JPG', 'Cant': 'Premis Cant 2019 -min.jpg' }
+  '2019': { 'Música de cambra': '19 cambra-min.JPG', 'Cant': 'Premis Cant 2019 -min.jpg' },
+  '2018': { 'Música de cambra': 'cambra2018-min.jpg', 'Cant': 'cant 2018-min.jpg' },
+  '2017': { 'Cant': 'Cant2017-min.jpg' },
+  '2014': { 'Música de cambra': '2014cambra-min.jpg', 'Cant': '14 cant-min.JPG' },
+  '2013': { 'Música de cambra': '13 cambra-min.jpg', 'Cant': 'cant2013-min.jpg' }
 };
 function setupWinnerHistory() {
   const years = document.querySelector('.winner-years');
@@ -90,7 +94,6 @@ function setupWinnerHistory() {
     detail.querySelectorAll('.special-note').forEach(note => note.remove());
     detail.querySelectorAll('.winner-column').forEach(column => {
       const entries = [...column.querySelectorAll('.winner-entry')];
-      entries.forEach(entry => entry.querySelector('.winner-photo')?.remove());
       const oldPhoto = column.querySelector('.winner-group-photo');
       oldPhoto?.remove();
       const category = column.querySelector('h3')?.textContent.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
